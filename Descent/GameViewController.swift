@@ -8,62 +8,67 @@
 
 import UIKit
 import SpriteKit
+import iAd
 
-extension SKNode {
-    class func unarchiveFromFile(file : NSString) -> SKNode? {
-        if let path = NSBundle.mainBundle().pathForResource(file, ofType: "sks") {
-            var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)!
-            var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
-            
-            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as GameScene
-            archiver.finishDecoding()
-            return scene
-        } else {
-            return nil
-        }
-    }
-}
+var adBannerView = ADBannerView(adType: .Banner)
+var playSound = true
 
-class GameViewController: UIViewController {
-
+class GameViewController: UIViewController, ADBannerViewDelegate {
+    
+    let scene = MenuScene()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
-            // Configure the view.
-            let skView = self.view as SKView
-            skView.showsFPS = true
-            skView.showsNodeCount = true
-            
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
-            skView.ignoresSiblingOrder = true
-            
-            /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .AspectFill
-            
-            skView.presentScene(scene)
-        }
+        scene.size = self.view.frame.size
+        let skView = self.view as! SKView
+        skView.showsFPS = true
+        skView.showsNodeCount = false
+        skView.ignoresSiblingOrder = true
+        skView.showsNodeCount = true
+        skView.showsPhysics = true
+        scene.scaleMode = .ResizeFill
+        loadAds()
+        skView.presentScene(scene)
     }
-
+    
     override func shouldAutorotate() -> Bool {
-        return true
+        return false
     }
-
+    
     override func supportedInterfaceOrientations() -> Int {
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
+            return Int(UIInterfaceOrientationMask.Portrait.rawValue)
         } else {
             return Int(UIInterfaceOrientationMask.All.rawValue)
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
     }
-
+    
     override func prefersStatusBarHidden() -> Bool {
-        return true
+        return false
     }
+    
+    //iAd
+    func loadAds() {
+        adBannerView = ADBannerView(frame: CGRect.zeroRect)
+        adBannerView.center = CGPoint(x: adBannerView.center.x, y: view.bounds.size.height - adBannerView.frame.size.height / 2)
+        adBannerView.delegate = self
+        adBannerView.hidden = true
+        view.addSubview(adBannerView)
+    }
+    
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        banner.hidden = false
+        println("Ad shown")
+    }
+    
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        banner.hidden = true
+        //println("Ad failed. error: \(error.localizedDescription)")
+    }
+    
 }
