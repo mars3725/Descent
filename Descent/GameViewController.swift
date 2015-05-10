@@ -52,7 +52,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         return false
     }
     
-    //iAd
+    //iAd Stuff
     func loadAds() {
         adBannerView = ADBannerView(frame: CGRect.zeroRect)
         adBannerView.center = CGPoint(x: adBannerView.center.x, y: view.bounds.size.height - adBannerView.frame.size.height / 2)
