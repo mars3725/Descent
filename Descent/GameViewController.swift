@@ -29,6 +29,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         scene.scaleMode = .ResizeFill
         loadAds()
         skView.presentScene(scene)
+        adBannerView.frame = CGRect()
     }
     
     override func shouldAutorotate() -> Bool {
