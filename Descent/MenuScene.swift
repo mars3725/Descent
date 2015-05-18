@@ -40,7 +40,7 @@ class MenuScene: SKScene {
                 displayTime = NSString(format: "%.1f", savedScore!)
             }
             
-        let timeLabel = SKLabelNode(text: "You Lasted \(displayTime) seconds!")
+        let timeLabel = SKLabelNode(text: "Last Game was \(displayTime) seconds!")
             timeLabel.fontColor = SKColor.blackColor()
             timeLabel.position = CGPointMake(self.frame.midX, self.frame.midY - 100)
             self.addChild(timeLabel)
