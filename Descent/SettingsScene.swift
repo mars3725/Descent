@@ -10,21 +10,22 @@ import SpriteKit
 
 class SettingsScene: SKScene {
     
-    var backButton = SKLabelNode(text: "Back ➤")
+    var backButton = SKLabelNode(text: "Back ▶︎")
     var soundButton = SKSpriteNode()
-    
-    override func didMoveToView(view: SKView) {
-        self.backgroundColor = SKColor.whiteColor()
-        backButton.position = CGPointMake(self.frame.maxY - 10, self.frame.maxX - 10)
-        backButton.fontColor = SKColor.blackColor()
-        soundButton.position = CGPointMake(self.frame.midX, self.frame.midY + 50)
-        let developerCredits = SKLabelNode(text: "Created By Matthew Mohandiss")
-        developerCredits.fontColor = SKColor.blackColor()
+    var developerCredits = SKLabelNode(text: "Created By Matthew Mohandiss")
+    var composerCredits = SKLabelNode(text: "Music By Ramsey Mohandiss")
+    override func didMove(to view: SKView) {
+        self.backgroundColor = SKColor.white
+        backButton.position = CGPoint(x: self.frame.maxX - 55, y: self.frame.maxY - (30 + (adBannerView?.frame.height)!))
+        backButton.fontColor = SKColor.black
+        soundButton.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 50)
+        
+        developerCredits.fontColor = SKColor.black
         developerCredits.fontSize = 28
-        developerCredits.position = CGPointMake(self.frame.midX, self.frame.minY + 85)
-        let composerCredits = SKLabelNode(text: "Music By Ramsey Mohandiss")
-        composerCredits.position = CGPointMake(self.frame.midX, self.frame.minY + 55)
-        composerCredits.fontColor = SKColor.blackColor()
+        developerCredits.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 85)
+        
+        composerCredits.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 55)
+        composerCredits.fontColor = SKColor.black
         composerCredits.fontSize = 28
         if playSound { soundButton.texture = SKTexture(imageNamed: "Settings")} //soundOff
         else {soundButton.texture = SKTexture(imageNamed: "Settings")} //soundOn
@@ -35,14 +36,16 @@ class SettingsScene: SKScene {
         self.addChild(composerCredits)
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch: AnyObject in touches {
-            let location = touch.locationInNode(self)
-            if backButton.containsPoint(location) {
+            let location = touch.location(in: self)
+            if backButton.contains(location) {
                 let scene = MenuScene(size: self.size)
-                self.view?.presentScene(scene, transition: SKTransition.pushWithDirection(SKTransitionDirection.Left, duration: 1))
-            } else if soundButton.containsPoint(location) {
+                self.view?.presentScene(scene, transition: SKTransition.push(with: SKTransitionDirection.left, duration: 1))
+            } else if soundButton.contains(location) {
                 toggleSound()
+            } else if developerCredits.contains(location) {
+                UIApplication.shared.openURL(URL(string: "http://matthewmohandiss.weebly.com")!)
             }
         }
     }

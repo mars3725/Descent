@@ -13,9 +13,9 @@ class Block: SKSpriteNode {
         //let image = SKTexture(imageNamed: "Drop")
         let image = SKTexture(imageNamed: "Block")
         self.init(texture: image, color: color, size: image.size()) //45,45
-        self.runAction(SKAction.repeatActionForever(SKAction.moveByX(0, y: -speed, duration: 0.25)))
+        self.run(SKAction.repeatForever(SKAction.moveBy(x: 0, y: -speed, duration: 0.25)))
         self.name = "block"
-        self.anchorPoint = CGPointMake(0, 0)
+        self.anchorPoint = CGPoint(x: 0, y: 0)
         self.colorBlendFactor = 1
         //self.setScale(0.3)
         self.setScale(0.4)

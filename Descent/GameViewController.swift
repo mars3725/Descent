@@ -10,7 +10,7 @@ import UIKit
 import SpriteKit
 import iAd
 
-var adBannerView = ADBannerView(adType: .Banner)
+var adBannerView = ADBannerView(adType: .banner)
 var playSound = true
 
 class GameViewController: UIViewController, ADBannerViewDelegate {
@@ -22,25 +22,24 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         scene.size = self.view.frame.size
         let skView = self.view as! SKView
         skView.showsFPS = true
-        skView.showsNodeCount = false
         skView.ignoresSiblingOrder = true
         skView.showsNodeCount = true
-        skView.showsPhysics = true
-        scene.scaleMode = .ResizeFill
+        //skView.showsPhysics = true
+        scene.scaleMode = .resizeFill
         loadAds()
         skView.presentScene(scene)
-        adBannerView.frame = CGRect()
+        adBannerView?.frame = CGRect()
     }
     
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return false
     }
     
-    override func supportedInterfaceOrientations() -> Int {
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIInterfaceOrientationMask.portrait
         } else {
-            return Int(UIInterfaceOrientationMask.All.rawValue)
+            return UIInterfaceOrientationMask.all
         }
     }
     
@@ -49,27 +48,29 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         // Release any cached data, images, etc that aren't in use.
     }
     
-    override func prefersStatusBarHidden() -> Bool {
-        return false
+    override var prefersStatusBarHidden : Bool {
+        return true
     }
     
     //iAd Stuff
     func loadAds() {
-        adBannerView = ADBannerView(frame: CGRect.zeroRect)
-        adBannerView.center = CGPoint(x: adBannerView.center.x, y: view.bounds.size.height - adBannerView.frame.size.height / 2)
-        adBannerView.delegate = self
-        adBannerView.hidden = true
-        view.addSubview(adBannerView)
+        adBannerView = ADBannerView(frame: CGRect.zero)
+        adBannerView?.center = CGPoint(x: (adBannerView?.center.x)!, y: view.bounds.size.height - (adBannerView?.frame.size.height)! / 2)
+        adBannerView?.delegate = self
+        adBannerView?.isHidden = true
+        view.addSubview(adBannerView!)
     }
     
-    func bannerViewDidLoadAd(banner: ADBannerView!) {
-        banner.hidden = false
-        println("Ad shown")
+    func bannerViewDidLoadAd(_ banner: ADBannerView!) {
+        if banner.isHidden {
+        banner.isHidden = false
+        print("Ad shown")
+        }
     }
     
-    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
-        banner.hidden = true
-        //println("Ad failed. error: \(error.localizedDescription)")
+    func bannerView(_ banner: ADBannerView!, didFailToReceiveAdWithError error: Error!) {
+        banner.isHidden = true
+        print("Ad failed. error: \(error.localizedDescription)")
     }
     
 }
